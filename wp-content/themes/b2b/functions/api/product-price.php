@@ -18,7 +18,6 @@ function b2b_alter_price_display( $price_html, $product ) {
 	if ( ! is_admin() ) {
 
 		//return $price_html;
-
 		$sku                    = $product->get_sku();
 		$user_id                = get_current_user_id();
 		$customer_name_id       = get_user_meta( $user_id, 'customer_name_id', true );

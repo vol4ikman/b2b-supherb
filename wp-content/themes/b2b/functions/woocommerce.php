@@ -30,9 +30,6 @@ add_filter( 'woocommerce_get_price_html', 'wpa83367_price_html', 100, 2 );
 add_action( 'woocommerce_before_calculate_totals', 'b2b_add_user_custom_price' );
 
 function b2b_add_user_custom_price( $cart_object ) {
-    $custom_price = 10; // This will be your custome price  
-    $target_product_id = 598;
-
 	$user_id             = get_current_user_id();
 	$customer_name_id    = get_user_meta( $user_id, 'customer_name_id', true );
 	
@@ -60,7 +57,6 @@ function wpa83367_price_html( $price, $product ){
 		$stock = $product->get_stock_quantity();
 		$stock_message    = '';
 		$stock_html       = '';
-		
 		if( $stock && $stock < 300 ) {
 			$stock_message = 'חסר במלאי';
 		}
@@ -83,7 +79,7 @@ function wpa83367_price_html( $price, $product ){
  */
 function b2b_single_product_price_wrapper() {
 	global $product;
-	$stock = $product->get_stock_quantity();
+	$stock           = $product->get_stock_quantity();
 	$stock_message = '';
 	if( $stock && $stock < 300 ) {
 		$stock_message = 'חסר במלאי';
@@ -470,7 +466,8 @@ add_filter('woocommerce_get_availability_text', 'b2b_change_soldout_stock_messag
 
 function b2b_change_soldout_stock_message ( $text, $product) {
 	$stock_quantity = $product->get_stock_quantity();
-	if( $stock_quantity < 300 ) {
+	$stock_status    = $product->get_stock_status();
+	if( ('instock' !== $stock_status) && $stock_quantity && $stock_quantity < 300 ) {
 		$text = 'חסר במלאי';
 	}
 	return $text;

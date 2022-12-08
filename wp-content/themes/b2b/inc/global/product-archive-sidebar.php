@@ -30,7 +30,8 @@ $product_terms                 = get_terms(
 						continue;
 						// escape כללי category.
 					}
-					$color = get_field( 'cube_color', 'product_cat_' . $product_term->term_id );
+					$random_colors = array( '#34573e','#e38e2d','#aca4ce','#fe767e','#eedc4c' );
+					$color = get_field( 'cube_color', 'product_cat_' . $product_term->term_id ) ? get_field( 'cube_color', 'product_cat_' . $product_term->term_id ) : $random_colors[array_rand($random_colors)];
 					?>
 					<li data-term="<?php echo esc_html( $product_term->term_id ); ?>">
 						<a href="<?php echo esc_url( get_term_link( $product_term ) ); ?>">

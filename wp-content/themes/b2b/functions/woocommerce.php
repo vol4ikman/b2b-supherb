@@ -25,9 +25,35 @@ add_action( 'woocommerce_after_single_product_summary', 'b2b_product_pro', 12 );
 
 add_filter( 'woocommerce_account_menu_items', 'b2b_my_account_links' );
 add_filter( 'woocommerce_checkout_fields', 'b2b_override_checkout_fields' );
-
-
 add_filter( 'woocommerce_get_price_html', 'wpa83367_price_html', 100, 2 );
+
+add_action( 'woocommerce_before_calculate_totals', 'b2b_add_user_custom_price' );
+
+function b2b_add_user_custom_price( $cart_object ) {
+    $custom_price = 10; // This will be your custome price  
+    $target_product_id = 598;
+
+	$user_id             = get_current_user_id();
+	$customer_name_id    = get_user_meta( $user_id, 'customer_name_id', true );
+	
+    foreach ( $cart_object->cart_contents as $value ) {
+		
+		$sku = $value['data']->get_sku();
+		
+		if( $sku && $customer_name_id ) {
+			$product_price_for_customer = get_final_product_price( $customer_name_id, $sku );
+			if( $product_price_for_customer && is_array($product_price_for_customer) ) {
+				$product_price_for_customer = reset( $product_price_for_customer );
+				if( isset( $product_price_for_customer['PRICE'] ) && $product_price_for_customer['PRICE'] ) {
+					$value['data']->set_price( $product_price_for_customer['PRICE'] );
+				}
+			}
+		} else {
+			print_r("Customer name or SKU is invalid");
+			die();
+		}
+    }
+}
 
 function wpa83367_price_html( $price, $product ){
 	if( 'simple' === $product->get_type() ) {

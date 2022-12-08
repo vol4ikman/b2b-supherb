@@ -180,30 +180,32 @@ function filter_sidebar_products() {
 			'type'    => 'NUMERIC', 
 		);
 	}
-	
-	switch ( $category_order_by ) {
-		case 'date_asc':
-			$filter_args['orderby'] = 'publish_date';
-			$filter_args['order']   = 'ASC';
-			break;
-		case 'date_desc':
-			$filter_args['orderby'] = 'publish_date';
-			$filter_args['order']   = 'DESC';
-			break;
-		case 'price_asc':
-			$filter_args['orderby']    = 'meta_value_num';
-			$filter_args['meta_key']   = '_price'; //phpcs:ignore.
-			$filter_args['order']      = 'asc';
-			break;
-		case 'price_desc':
-			$filter_args['orderby']    = 'meta_value_num';
-			$filter_args['meta_key']   = '_price'; //phpcs:ignore.
-			$filter_args['order']      = 'desc';
-			break;
+
+	if( $category_order_by ) {
+		switch ( $category_order_by ) {
+			case 'date_asc':
+				$filter_args['orderby'] = 'publish_date';
+				$filter_args['order']   = 'ASC';
+				break;
+			case 'date_desc':
+				$filter_args['orderby'] = 'publish_date';
+				$filter_args['order']   = 'DESC';
+				break;
+			case 'price_asc':
+				$filter_args['orderby']    = 'meta_value_num';
+				$filter_args['meta_key']   = '_price'; //phpcs:ignore.
+				$filter_args['order']      = 'DESC';
+				break;
+			case 'price_desc':
+				$filter_args['orderby']    = 'meta_value_num';
+				$filter_args['meta_key']   = '_price'; //phpcs:ignore.
+				$filter_args['order']      = 'ASC';
+				break;
+		}
 	}
 
 	//print_r($filter_args); die();
-	wp_reset_postdata();
+
 	$cat_products = new WP_Query( $filter_args );
 
 	if ( $cat_products->have_posts() ) {

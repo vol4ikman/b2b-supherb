@@ -1,0 +1,88 @@
+//compileCompressed: ../../build/css/a11y.css
+
+@import 'vars.scss';
+
+a,
+button,
+input,
+textarea,
+select {
+	&:focus {
+		outline: 2px solid black;
+	}
+}
+
+
+body.a11y-contrast {
+	background: $black;
+	.main-header,
+	.main-search input {
+		background: $black;
+	}
+
+	.footer {
+		background: $black;
+		color: $white;
+	}
+
+	.user-menu ul ul.user-submenu li a {
+		color: $black !important;
+	}
+
+	.product-block-item .product-title,
+	.sidebar-title,
+	.section-new-products h3,
+	.section-sales-products h3 {
+		color: yellow;
+	}
+
+	.info .info-item .value,
+	.info .info-item .title,
+	.user-menu a,
+	.main-search input,
+	.product-subtitle,
+	.product_meta,
+	.product-block-item .product-price-wrapper span.price ins,
+	.sidebar-cat-list ul li a,
+	.sidebar-widget-item li label,
+	.product-actions a,
+	.footer-links ul a,
+	.footer-credits .credit-item,
+	.footer-credits a {
+		color: $white;
+		opacity: 1;
+	}
+
+	.main-search input {
+		box-shadow: 0px 0px 2px #fff;
+	}
+
+	.main-search input {
+		&::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+		  color: $white;
+		}
+		&::-moz-placeholder { /* Firefox 19+ */
+		  color: $white;
+		}
+		&:-ms-input-placeholder { /* IE 10+ */
+		  color: $white;
+		}
+		&:-moz-placeholder { /* Firefox 18- */
+		  color: $white;
+		}
+	}
+
+	div.product p.price,
+	div.product span.price,
+	.product_title,
+	.product_meta a {
+		color: yellow;
+	}
+
+	.variations_form .single_add_to_cart_button,
+	.user-favorites-product a .favorites-title,
+	.product-share .product-share-title,
+	.wc-tabs-wrapper .wc-tabs a {
+		color: #FFF !important;
+	}
+}

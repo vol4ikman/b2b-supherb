@@ -1,0 +1,40 @@
+/* Admin styles */
+html[dir=rtl] body.user-edit-php .form-table > tbody > .acf-field > .acf-label,
+html[dir=rtl] body.profile-php .form-table > tbody > .acf-field > .acf-label {
+    padding: 10px;
+}
+html[dir=rtl] body.user-edit-php #fieldset-billing tr th,
+html[dir=rtl] body.profile-php #fieldset-billing tr th,
+html[dir=rtl] body.profile-php  #fieldset-shipping tr th,
+html[dir=rtl] body.user-edit-php #fieldset-shipping tr th {
+    padding: 10px;
+}
+
+body.user-edit-php table.form-table,
+body.profile-php table.form-table {
+    border:1px solid silver;
+    background: #FFF;
+}
+
+tr[data-name="user_api_response_data"] textarea,
+tr[data-name="api_user_contacts"] textarea {
+    direction:ltr;
+}
+
+body.login {
+    background: #FFF;
+}
+.login h1 a {
+    width: 334px;
+    height: 49px;
+    background: url(https://b2b.dooble.us/wp-content/uploads/2022/09/image006-1.png);
+}
+
+body.login #wp-submit {
+    background: #A1D45D;
+    color: #35563C;
+    border: 0;
+}
+.login form {
+    border: 2px solid #35563C;
+}

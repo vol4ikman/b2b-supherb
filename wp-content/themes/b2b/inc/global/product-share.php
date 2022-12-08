@@ -19,9 +19,11 @@ $product_permalink   = get_permalink( $item_id );
 			</div>
 		<?php endif; ?>
 		<div class="product-share-buttons">
+			<?php /*
 			<a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo esc_url( $product_permalink ); ?>" target="_blank">
 				<img src="<?php echo esc_url( THEME ); ?>/images/facebook.png" alt="Facebook">
 			</a>
+			*/ ?>
 			<a href="https://wa.me/?text=<?php echo esc_url( $product_permalink ); ?>" target="_blank">
 				<img src="<?php echo esc_url( THEME ); ?>/images/whatsapp.png" alt="WhatsApp">
 			</a>

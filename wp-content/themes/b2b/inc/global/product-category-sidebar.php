@@ -7,12 +7,13 @@
 
 $current_prcat_id = get_queried_object_id();
 
-$product_types = get_terms(
-	array(
-		'taxonomy'   => 'product_ctype',
-		'hide_empty' => false,
-	)
-);
+// $product_types = get_terms(
+// 	array(
+// 		'taxonomy'   => 'product_ctype',
+// 		'hide_empty' => false,
+// 	)
+// );
+$product_types_new = get_product_types(); //helpers.php
 
 $product_brands = get_terms(
 	array(
@@ -86,6 +87,19 @@ $category_price_range = get_category_price_range( get_queried_object() ); // woo
 			<div class="sidebar-widget-title">
 				סוג מוצר
 			</div>
+			<?php if ( $product_types_new ) : ?>
+				<ul>
+					<?php foreach ( $product_types_new as $product_type ) : ?>
+						<li data-term="<?php echo esc_html( $product_type ); ?>">
+							<label>
+								<input type="checkbox" name="productstype[]" value="<?php echo esc_html( $product_type ); ?>">
+								<?php echo esc_html( $product_type ); ?>
+							</label>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
+			<?php /*
 			<?php if ( $product_types ) : ?>
 				<ul>
 					<?php foreach ( $product_types as $product_term ) : ?>
@@ -98,6 +112,7 @@ $category_price_range = get_category_price_range( get_queried_object() ); // woo
 					<?php endforeach; ?>
 				</ul>
 			<?php endif; ?>
+			*/ ?>
 		</div>
 
 		<div class="sidebar-price-range sidebar-widget-item">

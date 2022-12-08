@@ -43,41 +43,64 @@ $user_products    = new WP_Query(
 					?>
 					<tr data-pid="<?php echo esc_html( $user_product->get_id() ); ?>"
 						data-type="<?php echo esc_html( $user_product_type ); ?>">
+						
 						<td class="is-checkbox">
 							<input type="checkbox" name="pr_to_add_to_cart[]" value="<?php echo esc_html( $user_product->get_id() ); ?>">
 						</td>
+
 						<td class="product-meta">
 							<div class="product-meta-inner">
 								<div class="p-image">
 									<a href="<?php echo esc_url( get_permalink( $user_product->get_id() ) ); ?>">
 										<?php
-										if ( has_post_thumbnail() ) :
+										if ( has_post_thumbnail() ) {
 											the_post_thumbnail( get_the_ID(), 'user-product-table' );
-										else :
+										} else {
 											$default_product_image = get_field( 'default_product_image', 'option' );
 											if ( $default_product_image ) {
 												$default_product_image = $default_product_image['url'];
 											}
 											?>
 											<img src="<?php echo esc_url( $default_product_image ); ?>" alt="" width="120" height="120">
-										<?php endif; ?>
+										<?php } ?>
 									</a>
 								</div>
 								<div class="p-data">
 									<div class="p-title">
 										<?php echo esc_html( get_the_title( $user_product->get_id() ) ); ?>
-										<?php if ( $subtitle ) : ?>
-											<div class="subtitle">
-												<?php echo wp_kses_post( $subtitle ); ?>
-											</div>
+										<?php if ( 'variation' === $user_product_type ) : 
+											$size_attr = $user_product->get_attribute( 'size' );
+											if( $size_attr ) {
+												if ( strpos($size_attr, 'כמוסות') !== false ){
+													$size_attr = $size_attr;
+												} else {
+													$size_attr = $size_attr . ' כמוסות';
+												}
+												if( $size_attr ) {
+													?>
+													<div class="subtitle">
+														<?php echo wp_kses_post( $size_attr ); ?>
+													</div>
+													<?php
+												}
+											}
+											?>	
+										<?php else: ?>
+											<?php if ( $subtitle ) : ?>
+												<div class="subtitle">
+													<?php echo wp_kses_post( $subtitle ); ?>
+												</div>
+											<?php endif; ?>
 										<?php endif; ?>
 									</div>
 								</div>
 							</div>
 						</td>
+						
 						<td class="product-sku">
 							<?php echo esc_html( $user_product->get_sku() ); ?>
 						</td>
+
 						<td class="product-price">
 							<div class="product-price-inner">
 								<?php echo wp_kses_post( $user_product->get_price_html() ); ?>

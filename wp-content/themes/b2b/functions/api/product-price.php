@@ -28,6 +28,25 @@ function b2b_alter_price_display( $price_html, $product ) {
 		if( $final_product_price && is_array($final_product_price) ) {
 			$final_product_price = reset( $final_product_price );
 			$price_html = wc_price( $final_product_price['PRICE'] );
+
+			if( 'simple' === $product->get_type() ) {
+				$stock = $product->get_stock_quantity();
+				$stock_message    = '';
+				$stock_html       = '';
+				if( $stock && $stock < 300 ) {
+					$stock_message = 'מלאי מוגבל';
+				}
+				if ( $stock_message ) : ?>
+					<?php ob_start(); ?>
+					<div class="b2b-product-stock-message">
+						<p class="stock-message stock in-stock">
+							<?php echo esc_html( $stock_message ); ?>
+						</p>
+					</div>
+					<?php $stock_html = ob_get_clean(); ?>
+				<?php endif;
+				$price_html =  $stock_html . $price_html;
+			}
 		}
 
 		/*

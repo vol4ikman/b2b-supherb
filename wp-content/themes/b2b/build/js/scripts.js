@@ -1,3 +1,33 @@
+// Change variation + update product id for add to favorites button attribute
+jQuery(document).on(
+	"change",
+	".product-block-item.is-product-variable form.cart select[name='attribute_size']",
+	function (e) {
+		e.preventDefault();
+		var _this = jQuery(this);
+		var chosen_variation = _this.val();
+		var form = JSON.parse(
+			_this.parents("form.cart").attr("data-product_variations")
+		);
+		var variation_id = "";
+
+		if (form && chosen_variation) {
+			jQuery(form).each(function (key, item) {
+				if (item["attributes"]["attribute_size"] === chosen_variation) {
+					variation_id = item.variation_id;
+				}
+			});
+		}
+
+		if (variation_id) {
+			_this
+				.parents(".product-block-item.is-product-variable")
+				.find(".add-to-my-products")
+				.attr("data-item-id", variation_id);
+		}
+	}
+);
+
 // Close minicart sidebar
 jQuery(document).on("click", ".minicart-close button", function (e) {
 	e.preventDefault();

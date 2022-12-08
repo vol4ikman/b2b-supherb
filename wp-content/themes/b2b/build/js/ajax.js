@@ -78,10 +78,12 @@ jQuery(document).on("click", ".add-to-my-products", function (e) {
 	e.preventDefault();
 	var item_id = jQuery(this).attr("data-item-id");
 	if (typeof item_id != "undefined" && item_id) {
-		console.log(item_id);
 		add_product_to_user_favorites(item_id);
 	} else {
-		alert("יש לבחור סוג מוצר.");
+		Swal.fire({
+			title: "יש לבחור סוג מוצר.",
+			confirmButtonText: "סגור",
+		});
 	}
 });
 
@@ -232,21 +234,39 @@ jQuery(document).on("submit", ".product-block-item form.cart", function (e) {
 		url: wc_add_to_cart_params.ajax_url,
 		data: data,
 		success: function (response) {
-			console.log(response.fragments);
-			console.log(response.fragments["div.widget_shopping_cart_content"]);
+			console.log(response);
+			console.log(response.error);
 
-			if (
-				typeof response.fragments[
-					"div.widget_shopping_cart_content"
-				] !== "undefined" &&
-				response.fragments["div.widget_shopping_cart_content"]
-			) {
+			if (typeof response.error !== "undefined" && response.error) {
+				jQuery.unblockUI();
+				alert("שגיאת מערכת. יש לנסות להוסיף מוצר זה לעגלה מאוחר יותר");
+			} else if (response.fragments["div.widget_shopping_cart_content"]) {
 				jQuery("div.widget_shopping_cart_content").html(
 					response.fragments["div.widget_shopping_cart_content"]
 				);
-			}
 
-			jQuery.unblockUI();
+				jQuery.ajax({
+					type: "post",
+					url: wc_add_to_cart_params.ajax_url,
+					data: {
+						action: "get_cart_contents_count",
+					},
+					success: function (response) {
+						if (response) {
+							jQuery(
+								".account-button.cart-button .cart_items"
+							).html(response);
+						}
+
+						jQuery.unblockUI();
+
+						Swal.fire({
+							title: "המוצר נוסף לסל בהצלחה",
+							confirmButtonText: "המשך בקניות",
+						});
+					},
+				});
+			}
 		},
 	});
 });
@@ -319,7 +339,10 @@ function add_product_to_user_favorites(item_id) {
 		success: function (response) {
 			console.log(response);
 			if (!response.error) {
-				alert(response.message);
+				Swal.fire({
+					title: response.message,
+					confirmButtonText: "סגור",
+				});
 			}
 		},
 	});

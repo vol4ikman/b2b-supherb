@@ -5,6 +5,28 @@
  * @package WordPress
  */
 
+function get_product_types() {
+	global $post;
+	$submissions = array();
+	$meta_key = 'form_of_submission';
+	$products = new WP_Query(
+		array(
+			'post_type' => 'product',
+			'posts_per_page' => -1,
+			'post_status' => 'published'
+		)
+	);
+	if( $products->have_posts() ) {
+		while( $products->have_posts() ) : $products->the_post();
+			$submission = get_field($meta_key, $post->ID);
+			if( $submission ) {
+				$submissions[$submission] = $submission;
+			}
+		endwhile;
+		wp_reset_postdata();
+	}
+	return $submissions;
+}
 /**
  * ACF Google API
  *

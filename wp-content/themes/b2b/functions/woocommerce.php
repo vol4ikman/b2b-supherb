@@ -25,7 +25,6 @@ add_action( 'woocommerce_after_single_product_summary', 'b2b_product_pro', 12 );
 
 add_filter( 'woocommerce_account_menu_items', 'b2b_my_account_links' );
 add_filter( 'woocommerce_checkout_fields', 'b2b_override_checkout_fields' );
-add_filter( 'woocommerce_get_price_html', 'wpa83367_price_html', 100, 2 );
 
 add_action( 'woocommerce_before_calculate_totals', 'b2b_add_user_custom_price' );
 
@@ -52,28 +51,6 @@ function b2b_add_user_custom_price( $cart_object ) {
     }
 }
 
-function wpa83367_price_html( $price, $product ){
-	if( 'simple' === $product->get_type() ) {
-		$stock = $product->get_stock_quantity();
-		$stock_message    = '';
-		$stock_html       = '';
-		if( $stock && $stock < 300 ) {
-			$stock_message = 'חסר במלאי';
-		}
-		if ( $stock_message ) : ?>
-			<?php ob_start(); ?>
-			<div class="b2b-single-product-stock-message">
-				<p class="stock-message stock in-stock">
-					<?php echo esc_html( $stock_message ); ?>
-				</p>
-			</div>
-			<?php $stock_html = ob_get_clean(); ?>
-		<?php endif;
-		return $stock_html . $price;
-	}
-	return $price;
-}
-
 /**
  * B2B single_product_price_wrapper
  */
@@ -82,7 +59,7 @@ function b2b_single_product_price_wrapper() {
 	$stock           = $product->get_stock_quantity();
 	$stock_message = '';
 	if( $stock && $stock < 300 ) {
-		$stock_message = 'חסר במלאי';
+		$stock_message = 'מלאי מוגבל';
 	}
 	?>
 	<div class="b2b-single-product-price-wrapper">
@@ -95,9 +72,9 @@ function b2b_single_product_price_wrapper() {
 					<?php echo esc_html( $stock_message ); ?>
 				</p>
 			</div>
-		<?php endif; ?>
 
-		<a href="#" class="replacement-products">למוצרים תחליפיים</a>
+			<a href="#" class="replacement-products">למוצרים תחליפיים</a>
+		<?php endif; ?>
 	</div>
 	<?php
 }
@@ -462,19 +439,7 @@ function get_variation_data_from_variation_id( $item_id ) {
 	return $variation_detail;
 }
 
-add_filter('woocommerce_get_availability_text', 'b2b_change_soldout_stock_message', 10, 2 );
-
-function b2b_change_soldout_stock_message ( $text, $product) {
-	$stock_quantity = $product->get_stock_quantity();
-	$stock_status    = $product->get_stock_status();
-	if( ('instock' !== $stock_status) && $stock_quantity && $stock_quantity < 300 ) {
-		$text = 'חסר במלאי';
-	}
-	return $text;
-}
-
 add_filter ( 'woocommerce_product_thumbnails_columns', 'bbloomer_change_gallery_columns' );
- 
 function bbloomer_change_gallery_columns() {
      return 1; 
 }

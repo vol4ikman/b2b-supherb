@@ -9,6 +9,10 @@
  * Load styles
  */
 function qs_theme_styles() {
+
+	wp_register_style( 'sweetalert2', THEME . '/assets/css/sweetalert2.min.css', array(), THEME_VER . '-v-' . time(), 'all' );
+	wp_enqueue_style( 'sweetalert2' );
+
 	wp_register_style( 'main-style', THEME . '/assets/css/style.css', array(), THEME_VER . '-v-' . time(), 'all' );
 	wp_enqueue_style( 'main-style' );
 	if ( is_product() ) {
@@ -36,7 +40,14 @@ function qs_theme_scripts() {
 	wp_enqueue_script( 'jquery' );
 
 	wp_register_script( 'g-translate', '//translate.google.com/translate_a/element.js', array( 'jquery' ), THEME_VER, true );
+	
 	wp_register_script( 'assets', JS_INC . 'assets.min.js', array( 'jquery' ), THEME_VER, true );
+	wp_enqueue_script( 'assets' );
+
+	wp_register_script( 'sweetalert2', THEME . '/build/js/sweetalert2.js', array( 'jquery' ), THEME_VER, true );
+	wp_enqueue_script( 'sweetalert2' );
+
+	
 	wp_register_script( 'slick', JS_ASSETS_INC . 'slick.min.js', array( 'jquery' ), THEME_VER, true );
 	wp_register_script( 'blockUI', JS_INC . 'jquery.blockUI.js', array( 'jquery' ), THEME_VER, true );
 	if ( is_product_category() ) {
@@ -45,7 +56,7 @@ function qs_theme_scripts() {
 	wp_register_script( 'scripts', JS_INC . 'scripts.js', array( 'jquery' ), THEME_VER . '-v-' . time(), true );
 	wp_register_script( 'a11y', JS_INC . 'a11y.js', array( 'jquery' ), THEME_VER, true );
 
-	wp_enqueue_script( 'assets' );
+	
 
 	$site_settings = array(
 		'home_url'     => get_home_url(),

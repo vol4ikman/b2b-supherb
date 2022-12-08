@@ -13,8 +13,13 @@ add_action( 'wp_ajax_load_product_quick_view', 'load_product_quick_view' );
 
 add_action( 'wp_ajax_start_import_from_b2c', 'start_import_from_b2c' );
 
-add_action( 'wp_ajax_b2b_woocommerce_ajax_add_to_cart', 'b2b_woocommerce_ajax_add_to_cart' );
+add_action( 'wp_ajax_get_cart_contents_count', 'get_cart_contents_count' );
+function get_cart_contents_count() {
+	$cart_items = WC()->cart->get_cart_contents_count();
+	wp_send_json( $cart_items );
+}
 
+add_action( 'wp_ajax_b2b_woocommerce_ajax_add_to_cart', 'b2b_woocommerce_ajax_add_to_cart' );
 function b2b_woocommerce_ajax_add_to_cart() {
 	$form_args = array();
 	$form = isset( $_POST['form'] ) ? $_POST['form'] : '';
@@ -26,6 +31,19 @@ function b2b_woocommerce_ajax_add_to_cart() {
 	$variation_id        = absint($form_args['variation_id']);
 	$passed_validation   = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity);
 	$product_status      = get_post_status($product_id);
+
+	// print_r($product_id); 
+	// print_r('<br>');
+	// print_r($quantity); 
+	// print_r('<br>');
+	// print_r($variation_id); 
+	// print_r('<br>');
+	// print_r($passed_validation); 
+	// print_r('<br>');
+	// print_r($product_status);
+	
+	// die();
+	
 
 	if ( $passed_validation && WC()->cart->add_to_cart($product_id, $quantity, $variation_id) && 'publish' === $product_status ) {
 
@@ -41,8 +59,8 @@ function b2b_woocommerce_ajax_add_to_cart() {
 
 		$data = array(
 			'error' 		=> true,
+			'passed_validation' => $passed_validation,
 			'product_url' 	=> apply_filters('woocommerce_cart_redirect_after_error', get_permalink($product_id), $product_id),
-			'product_title' => get_the_title( $product_id )
 		);
 
 		wp_send_json($data);
@@ -131,10 +149,18 @@ function filter_sidebar_products() {
 		);
 	}
 
+	// if ( $productstype ) {
+	// 	$filter_args['tax_query'][] = array(
+	// 		'taxonomy' => 'product_stype',
+	// 		'terms'    => $productstype,
+	// 	);
+	// }
+	
 	if ( $productstype ) {
-		$filter_args['tax_query'][] = array(
-			'taxonomy' => 'product_stype',
-			'terms'    => $productstype,
+		$filter_args['meta_query'][] = array(
+			'key'     => 'form_of_submission',
+			'value'   => $productstype,
+			'compare' => 'IN',
 		);
 	}
 
@@ -146,13 +172,15 @@ function filter_sidebar_products() {
 	}
 
 	if ( $max_price ) {
+		$filter_args['meta_query']['relation'] = 'AND';
 		$filter_args['meta_query'][] = array(
 			'key'     => '_price',
-			'value'   => $max_price,
-			'compare' => '<=',
+			'value'   => array(0, $max_price),
+			'compare' => 'BETWEEN',
+			'type'    => 'NUMERIC', 
 		);
 	}
-
+	
 	switch ( $category_order_by ) {
 		case 'date_asc':
 			$filter_args['orderby'] = 'publish_date';
@@ -163,17 +191,19 @@ function filter_sidebar_products() {
 			$filter_args['order']   = 'DESC';
 			break;
 		case 'price_asc':
-			$filter_args['orderby']  = 'meta_value_num';
-			$filter_args['meta_key'] = '_price'; //phpcs:ignore.
-			$filter_args['order']    = 'ASC';
+			$filter_args['orderby']    = 'meta_value_num';
+			$filter_args['meta_key']   = '_price'; //phpcs:ignore.
+			$filter_args['order']      = 'asc';
 			break;
 		case 'price_desc':
-			$filter_args['orderby']  = 'meta_value_num';
-			$filter_args['meta_key'] = '_price'; //phpcs:ignore.
-			$filter_args['order']    = 'DESC';
+			$filter_args['orderby']    = 'meta_value_num';
+			$filter_args['meta_key']   = '_price'; //phpcs:ignore.
+			$filter_args['order']      = 'desc';
 			break;
 	}
 
+	//print_r($filter_args); die();
+	wp_reset_postdata();
 	$cat_products = new WP_Query( $filter_args );
 
 	if ( $cat_products->have_posts() ) {
